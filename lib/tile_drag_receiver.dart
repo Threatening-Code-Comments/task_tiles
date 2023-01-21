@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_tiles/tile_move_algo.dart';
 
 import 'custom_widgets.dart';
 import 'tile.dart';
@@ -43,8 +44,6 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
 
   @override
   Widget build(BuildContext context) {
-    print("halllo bewegegunge");
-
     int _width = context.watch<LayoutParams>().width;
     tileMap = context.watch<NoteTiles>().tileMap;
 
@@ -65,13 +64,31 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
       onMove: (details) {
         setState(() {
           var tile = details.data;
-
-          _stroke_color = (isFree()) ? Colors.amber : Colors.blueAccent;
-
-          print("halllo bewegegunge");
-
           tile.tempBounds = tile.bounds;
           tile.tempBounds!.moveToPoint(_coordinate, _width);
+
+          _stroke_color = Colors
+              .transparent; //(isFree()) ? Colors.amber : Colors.blueAccent;
+
+          // -------------hier startet der algo code
+
+          var tiles =
+              Provider.of<NoteTiles>(context, listen: false).tiles.toList();
+          tiles.remove(tile);
+          var gridWidth =
+              Provider.of<LayoutParams>(context, listen: false).width;
+          var ergebnis = MoveAlgorythm(
+              tiles: tiles, blockingTile: tile, gridWidth: gridWidth);
+          //Algo Klasse => {bool success; Map<Tile, Point> result}
+
+          if (ergebnis.succ) {
+            Provider.of<NoteTiles>(context, listen: false)
+                .updateTiles(ergebnis.movedTiles, tile);
+          } else {
+            print("FUCK FUCK FUCK INFINITY");
+          }
+
+          // -------------hier endet der algo code
         });
       },
       onLeave: (data) {
@@ -83,6 +100,8 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
         //animateColor();
         setState(() {
           _stroke_color = Colors.transparent;
+          data.enabled = true;
+          data.tempBounds = null;
         });
         data.bounds.moveToPoint(_coordinate, _width);
       }),

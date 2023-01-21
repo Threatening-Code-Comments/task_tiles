@@ -53,17 +53,17 @@ class NoteTiles with ChangeNotifier {
 
   // refresh tileMap and notify listeners
   Map<Point, Tile> refreshTileMap() {
-    tileMap.clear();
+    _tileMap.clear();
     for (var tile in _tiles) {
       for (var x in tile.bounds.x.asIterable) {
         for (var y in tile.bounds.y.asIterable) {
-          tileMap[Point(x, y)] = tile;
+          _tileMap[Point(x, y)] = tile;
         }
       }
     }
 
     _tileMapIsInvalid = false;
-    return tileMap;
+    return _tileMap;
   }
 
   void _notify() {
@@ -79,6 +79,19 @@ class NoteTiles with ChangeNotifier {
 
   void remove(Tile tile) {
     _tiles.remove(tile);
+    _notify();
+  }
+
+  void updateTiles(List<Tile> tiles, Tile blockingTile) {
+    /*for (var tile in tiles) {
+      var index = _tiles.indexOf(tile);
+
+      if (index == -1) _tiles.add(tile);
+    }*/
+    _tiles.clear();
+    _tiles.addAll(tiles);
+    _tiles.add(blockingTile);
+
     _notify();
   }
 }

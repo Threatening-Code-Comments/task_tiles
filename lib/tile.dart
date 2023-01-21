@@ -2,15 +2,31 @@ import 'dart:math';
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:task_tiles/tile_move_algo.dart';
 
 class Tile {
   String name;
 
-  Tile({required this.name, bool? enabled, bool? isVisible, Bounds? bounds})
-      : id = Random().nextInt(999999), //const Uuid().v1().toString(),
+  Tile(
+      {int? id,
+      required this.name,
+      bool? enabled,
+      bool? isVisible,
+      Bounds? bounds})
+      : id = id ?? Random().nextInt(999999), //const Uuid().v1().toString(),
         enabled = enabled ?? true,
         isVisible = isVisible ?? true,
         bounds = bounds ?? Bounds.empty();
+
+  Tile.copy(Tile tile)
+      : id = tile.id, //const Uuid().v1().toString(),
+        enabled = tile.enabled,
+        isVisible = tile.isVisible,
+        name = tile.name,
+        bounds = Bounds.fromBounds(tile.bounds),
+        tempBounds = tile.tempBounds != null
+            ? Bounds.fromBounds(tile.tempBounds!)
+            : null;
 
   Tile.withSizes(
       {required String name,
@@ -26,8 +42,6 @@ class Tile {
               yStart: yStart,
               height: height,
             ));
-
-  String title = "";
 
   final int id;
 
@@ -78,12 +92,26 @@ class Tile {
   }
 
   State? widgetState;
+
+  Tile.move(
+      {required Tile origin, required Direction dir, required num amountMoved})
+      : this(
+          id: origin.id,
+          name: origin.name,
+          bounds: Bounds.fromBounds(origin.bounds)
+            ..move(dir, amountMoved), //move bounds in constructor
+          enabled: origin.enabled,
+          isVisible: origin.isVisible,
+        );
 }
 
 class Bounds {
   Bounds({required this.x, required this.y});
 
   Bounds.empty() : this(x: Range.empty(), y: Range.empty());
+
+  Bounds.fromBounds(Bounds bounds)
+      : this(x: Range.fromRange(bounds.x), y: Range.fromRange(bounds.y));
 
   Bounds.fromSizes(
       {required int xStart,
@@ -119,6 +147,16 @@ class Bounds {
     return (this.x.contains(x) && this.y.contains(y));
   }
 
+  bool overlaps(Bounds other) {
+    if (x.to <= other.x.from ||
+        x.from >= other.x.to ||
+        y.to <= other.y.from ||
+        y.from >= other.y.to) {
+      return false;
+    }
+    return true;
+  }
+
   bool get hasPosition {
     var empty = Range.empty();
 
@@ -135,6 +173,34 @@ class Bounds {
   String toString() {
     return 'x:${x.from}..${x.to}|y:${y.from}..${y.to}';
   }
+
+  void move(Direction dir, num amountMoved) {
+    assert(amountMoved < double.infinity);
+
+    int amount = amountMoved.toInt();
+
+    var width = x.size;
+    var height = y.size;
+
+    switch (dir) {
+      case Direction.D:
+        y = Range.fromOffset(y, amount);
+        break;
+      case Direction.U:
+        y = Range.fromOffset(y, -amount);
+        break;
+
+      case Direction.L:
+        x = Range.fromOffset(x, -amount);
+        break;
+
+      case Direction.R:
+        x = Range.fromOffset(x, amount);
+        break;
+
+      default:
+    }
+  }
 }
 
 class Range {
@@ -144,6 +210,8 @@ class Range {
 
   Range.empty() : this(-1, -1);
   Range.fromRange(Range range) : this(range.from, range.to);
+  Range.fromOffset(Range range, int offset)
+      : this(range.from + offset, range.to + offset);
 
   final int from;
   final int to;

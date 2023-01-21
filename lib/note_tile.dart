@@ -83,6 +83,6 @@ class NoteTileTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(tile.title);
+    return Text(tile.name);
   }
 }
