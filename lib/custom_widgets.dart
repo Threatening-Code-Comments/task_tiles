@@ -14,8 +14,8 @@ class SizedCard extends StatefulWidget {
     this.enabled = true,
     this.shape,
     this.stroke,
-    bool? transparent,
     double? strokeWidth,
+    bool? transparent,
   })  : transparent = transparent ?? false,
         strokeWidth = strokeWidth ?? 10,
         cornerRadius = cornerRadius ?? 20;
@@ -91,7 +91,7 @@ class _SizedCardState extends State<SizedCard> {
   Color? getCardColor(BuildContext context) {
     if (widget.transparent) return Colors.transparent;
 
-    if (!widget.enabled) return Theme.of(context).cardColor.withOpacity(0.5);
+    if (!widget.enabled) return Theme.of(context).cardColor.withAlpha(255);
 
     //return the normal card color if no flag is set
     return null;

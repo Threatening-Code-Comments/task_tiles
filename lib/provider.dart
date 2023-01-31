@@ -82,6 +82,8 @@ class NoteTiles with ChangeNotifier {
     _notify();
   }
 
+  void notify() => _notify();
+
   void updateTiles(List<Tile> newTiles, {Tile? blockingTile}) {
     //debug
     var before = _tiles;

@@ -4,47 +4,34 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:task_tiles/tile_move_algo.dart';
 
+import 'package:quiver/core.dart';
+
 class Tile {
-  String _name;
+  String name;
 
-  String get name => _name;
-
-  set name(String name) {
-    _name = transformName(name);
-  }
-
-  static String transformName(String nameP) {
-    var name = nameP.split(" ").first;
-    var randomNumber = Random().nextInt(10000);
-    return "$name | $randomNumber";
-    //return name;
-  }
+  String title = '';
+  String text = '';
 
   Tile(
       {int? id,
-      required name,
+      required this.name,
       bool? enabled,
       bool? isVisible,
       Bounds? bounds,
       Bounds? tempBounds})
       : id = id ?? Random().nextInt(999999), //const Uuid().v1().toString(),
-        _enabled = enabled ?? true,
+        enabled = enabled ?? true,
         isVisible = isVisible ?? true,
         bounds = bounds ?? Bounds.empty(),
-        _tempBounds = tempBounds,
-        _name = transformName(name) {
-    if (!(enabled ?? true)) print("$_name was set false in const");
-  }
+        _tempBounds = tempBounds;
 
   Tile.copy(Tile tile)
       : id = tile.id, //const Uuid().v1().toString(),
-        _enabled = tile.enabled,
+        enabled = tile.enabled,
         isVisible = tile.isVisible,
-        _name = transformName(tile.name),
+        name = tile.name,
         bounds = Bounds.fromBounds(tile.bounds),
-        _tempBounds = Bounds.fromBounds(tile.tempBounds) {
-    if (!enabled) print("$_name was set false in copy const");
-  }
+        _tempBounds = Bounds.fromBounds(tile.tempBounds);
 
   Tile.withSizes(
       {required String name,
@@ -63,14 +50,7 @@ class Tile {
 
   final int id;
 
-  bool _enabled;
-
-  bool get enabled => _enabled;
-
-  set enabled(bool enabled) {
-    if (enabled == false) print("$_name |||| false!!!");
-    _enabled = enabled;
-  }
+  bool enabled;
 
   bool isVisible;
 
@@ -98,9 +78,9 @@ class Tile {
   int get maxY => tempBounds.y.to;
 
   Tile.empty()
-      : _name = '',
+      : name = '',
         id = 0,
-        _enabled = true,
+        enabled = true,
         isVisible = true,
         bounds = Bounds.empty();
 
@@ -119,12 +99,11 @@ class Tile {
   bool operator ==(Object other) =>
       other is Tile &&
       other.runtimeType == runtimeType &&
-      other._name == _name &&
-      other.enabled == _enabled;
+      other.name == name &&
+      other.enabled == enabled;
 
   @override
-  // TODO: implement hashCode
-  int get hashCode => _name.hashCode & enabled.hashCode;
+  int get hashCode => hash2(name, enabled);
 
   @override
   String toString() {
