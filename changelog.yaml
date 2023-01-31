@@ -12,7 +12,6 @@ commit v2:
   made noteTile not transparent on drag
   made tiles editable
 
-
 commit v1:
   fixed tile move (tile kept being disabled)
   refractored tile into smaller widgets
