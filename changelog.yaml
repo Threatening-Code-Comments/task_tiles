@@ -1,9 +1,20 @@
+to do:
+  make tiles interface with moveAlgo again (??)
+  animate layout changes
+
+commit v2:
+  moved files into folders
+  remove debug from tile
+  add tile contents: 
+    title
+    text
+  add tile settings page 
+  made noteTile not transparent on drag
+  made tiles editable
+
+
 commit v1:
   fixed tile move (tile kept being disabled)
   refractored tile into smaller widgets
   implemented changelog (meta)
   made NoteTiles#updateTiles() not clear the list and repopulate but make it smarter (not sure why it works)
-
-to do:
-  move tile files into folder
-  create more folders lol
