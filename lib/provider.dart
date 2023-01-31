@@ -82,16 +82,36 @@ class NoteTiles with ChangeNotifier {
     _notify();
   }
 
-  void updateTiles(List<Tile> tiles, Tile blockingTile) {
-    /*for (var tile in tiles) {
-      var index = _tiles.indexOf(tile);
+  void updateTiles(List<Tile> newTiles, {Tile? blockingTile}) {
+    //debug
+    var before = _tiles;
 
-      if (index == -1) _tiles.add(tile);
-    }*/
-    _tiles.clear();
-    _tiles.addAll(tiles);
-    _tiles.add(blockingTile);
+    //mark old tiles for deletion
+    var tilesToRemove = <Tile>{};
+
+    for (var tile in _tiles) {
+      if (!newTiles.contains(tile)) tilesToRemove.add(tile);
+    }
+
+    //apply changes
+    for (var tile in newTiles) {
+      if (!_tiles.contains(tile)) _tiles.add(tile);
+    }
+    for (var tile in tilesToRemove) {
+      _tiles.remove(tile);
+    }
+
+    // _tiles.clear();
+    // _tiles.addAll(newTiles);
+
+    if (blockingTile != null && !_tiles.contains(blockingTile)) {
+      _tiles.add(blockingTile);
+    }
 
     _notify();
   }
+
+  void clear() => _tiles.clear;
+
+  addAll(List<Tile> tiles) => _tiles.addAll(tiles);
 }

@@ -1,0 +1,9 @@
+commit v1:
+  fixed tile move (tile kept being disabled)
+  refractored tile into smaller widgets
+  implemented changelog (meta)
+  made NoteTiles#updateTiles() not clear the list and repopulate but make it smarter (not sure why it works)
+
+to do:
+  move tile files into folder
+  create more folders lol
