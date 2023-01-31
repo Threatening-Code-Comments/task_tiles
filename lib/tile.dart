@@ -5,28 +5,46 @@ import 'package:flutter/material.dart';
 import 'package:task_tiles/tile_move_algo.dart';
 
 class Tile {
-  String name;
+  String _name;
+
+  String get name => _name;
+
+  set name(String name) {
+    _name = transformName(name);
+  }
+
+  static String transformName(String nameP) {
+    var name = nameP.split(" ").first;
+    var randomNumber = Random().nextInt(10000);
+    return "$name | $randomNumber";
+    //return name;
+  }
 
   Tile(
       {int? id,
-      required this.name,
+      required name,
       bool? enabled,
       bool? isVisible,
-      Bounds? bounds})
+      Bounds? bounds,
+      Bounds? tempBounds})
       : id = id ?? Random().nextInt(999999), //const Uuid().v1().toString(),
-        enabled = enabled ?? true,
+        _enabled = enabled ?? true,
         isVisible = isVisible ?? true,
-        bounds = bounds ?? Bounds.empty();
+        bounds = bounds ?? Bounds.empty(),
+        _tempBounds = tempBounds,
+        _name = transformName(name) {
+    if (!(enabled ?? true)) print("$_name was set false in const");
+  }
 
   Tile.copy(Tile tile)
       : id = tile.id, //const Uuid().v1().toString(),
-        enabled = tile.enabled,
+        _enabled = tile.enabled,
         isVisible = tile.isVisible,
-        name = tile.name,
+        _name = transformName(tile.name),
         bounds = Bounds.fromBounds(tile.bounds),
-        tempBounds = tile.tempBounds != null
-            ? Bounds.fromBounds(tile.tempBounds!)
-            : null;
+        _tempBounds = Bounds.fromBounds(tile.tempBounds) {
+    if (!enabled) print("$_name was set false in copy const");
+  }
 
   Tile.withSizes(
       {required String name,
@@ -45,18 +63,44 @@ class Tile {
 
   final int id;
 
-  bool enabled;
+  bool _enabled;
+
+  bool get enabled => _enabled;
+
+  set enabled(bool enabled) {
+    if (enabled == false) print("$_name |||| false!!!");
+    _enabled = enabled;
+  }
+
   bool isVisible;
 
+  //Bounds bounds;
   Bounds bounds;
-  Bounds? tempBounds;
 
-  int get maxY => tempBounds?.y.to ?? bounds.y.to;
+  Bounds get tempBounds => _tempBounds ?? Bounds.fromBounds(bounds);
+  set tempBounds(Bounds? value) {
+    if (max(value?.x.from ?? 0, value?.x.to ?? 0) > 3) {
+      throw Exception("X must not be > 3, bounds: $value");
+    }
+    _tempBounds = value;
+  }
+
+  Bounds? _tempBounds;
+
+  void promoteTempBounds() {
+    if (_tempBounds == null) return;
+
+    bounds = _tempBounds!;
+
+    _tempBounds = null;
+  }
+
+  int get maxY => tempBounds.y.to;
 
   Tile.empty()
-      : name = '',
+      : _name = '',
         id = 0,
-        enabled = true,
+        _enabled = true,
         isVisible = true,
         bounds = Bounds.empty();
 
@@ -72,24 +116,22 @@ class Tile {
   }
 
   @override
+  bool operator ==(Object other) =>
+      other is Tile &&
+      other.runtimeType == runtimeType &&
+      other._name == _name &&
+      other.enabled == _enabled;
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => _name.hashCode & enabled.hashCode;
+
+  @override
   String toString() {
-    return "$name (${id})";
+    return "$name ($id)";
   }
 
   static final emptyTile = Tile.empty();
-
-  void moveTempBoundsDown({required int amount}) {
-    //if tempBounds null, assign bounds
-    tempBounds ??= bounds;
-    var tempB = tempBounds!;
-
-    Point start = Point(
-      tempB.x.from,
-      (tempB.y.from + amount),
-    );
-
-    tempBounds?.moveToPoint(start, 3);
-  }
 
   State? widgetState;
 
@@ -98,10 +140,11 @@ class Tile {
       : this(
           id: origin.id,
           name: origin.name,
-          bounds: Bounds.fromBounds(origin.bounds)
-            ..move(dir, amountMoved), //move bounds in constructor
+          bounds: origin.bounds,
           enabled: origin.enabled,
           isVisible: origin.isVisible,
+          tempBounds: Bounds.fromBounds(origin.tempBounds)
+            ..move(dir, amountMoved), //move bounds in constructor
         );
 }
 

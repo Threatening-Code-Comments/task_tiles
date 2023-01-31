@@ -23,6 +23,7 @@ class TileDragReceiver extends StatefulWidget {
 class _TileDragReceiverState extends State<TileDragReceiver> {
   late Point _coordinate;
 
+  //TODO strokeColor unused
   Color _stroke_color = Colors.transparent;
 
   late Map<Point, Tile> tileMap;
@@ -65,7 +66,7 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
         setState(() {
           var tile = details.data;
           tile.tempBounds = tile.bounds;
-          tile.tempBounds!.moveToPoint(_coordinate, _width);
+          tile.tempBounds.moveToPoint(_coordinate, _width);
 
           _stroke_color = Colors
               .transparent; //(isFree()) ? Colors.amber : Colors.blueAccent;
@@ -83,7 +84,7 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
 
           if (ergebnis.succ) {
             Provider.of<NoteTiles>(context, listen: false)
-                .updateTiles(ergebnis.movedTiles, tile);
+                .updateTiles(ergebnis.movedTiles, blockingTile: tile);
           } else {
             print("FUCK FUCK FUCK INFINITY");
           }
@@ -98,12 +99,20 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
       },
       onAccept: (data) => setState(() {
         //animateColor();
-        setState(() {
-          _stroke_color = Colors.transparent;
-          data.enabled = true;
-          data.tempBounds = null;
-        });
-        data.bounds.moveToPoint(_coordinate, _width);
+        _stroke_color = Colors.transparent;
+        data.enabled = true;
+        data.promoteTempBounds();
+
+        // data.bounds.moveToPoint(_coordinate, _width);
+        var tiles = Provider.of<NoteTiles>(context, listen: false).tiles;
+        for (var tile in tiles) {
+          tile.enabled = true;
+          tile.promoteTempBounds();
+        }
+
+        print(tiles);
+
+        Provider.of<NoteTiles>(context, listen: false).updateTiles(tiles);
       }),
     );
   }

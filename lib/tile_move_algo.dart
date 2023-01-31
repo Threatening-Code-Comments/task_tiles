@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:task_tiles/provider.dart';
 
@@ -43,6 +45,10 @@ class MoveAlgorythm {
       Direction.L: [],
       Direction.R: []
     };
+
+    for (var tile in tiles) {
+      tile.tempBounds = null;
+    }
 
     for (int i = 0; i < tiles.length; i++) {
       Map<Direction, num> nextValues = {};
@@ -92,27 +98,44 @@ class MoveAlgorythm {
       Direction dir, Tile tileToMove, List<Tile> otherTiles) {
     int iterations = 0;
     Tile tile = Tile.copy(tileToMove);
+    var tileToMoveBounds = tile.tempBounds;
+
     while (hasCollision(tile, otherTiles)) {
       iterations++;
       tile = Tile.move(origin: tile, dir: dir, amountMoved: 1);
-      if (tile.bounds.x.from < 0 ||
-          tile.bounds.y.from < 0 ||
-          tile.bounds.x.to > gridWidth) {
+      tileToMoveBounds = tile.tempBounds;
+      if (tileToMoveBounds.x.from < 0 ||
+          tileToMoveBounds.y.from < 0 ||
+          tileToMoveBounds.x.to > gridWidth) {
         return double.infinity; // Out of screen bounds
       }
     }
+
     return iterations;
   }
 
   bool hasCollision(Tile tile, List<Tile> otherTiles) {
-    if (tile.bounds.overlaps(blockingTile.tempBounds ?? blockingTile.bounds)) {
+    //start debug
+    // var x = [tile.tempBounds.x.from, tile.tempBounds.x.to];
+    // if (x.any((element) => element > 3)) throw Exception("maxX must not be >3");
+
+    // if (x.any((element) => element < 0)) throw Exception("minX must be > 0");
+
+    var b = tile.tempBounds;
+    if (b.x.from < 0 || b.x.to > gridWidth || b.y.from < 0) return true;
+
+    //end debug
+
+    if (tile.tempBounds.overlaps(blockingTile.tempBounds)) {
       return true;
     }
+
     for (Tile otherTile in otherTiles) {
-      if (tile.bounds.overlaps(otherTile.bounds)) {
+      if (tile.tempBounds.overlaps(otherTile.tempBounds)) {
         return true;
       }
     }
+
     return false;
   }
 }
