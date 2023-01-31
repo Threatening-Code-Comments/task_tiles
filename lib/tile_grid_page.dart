@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:provider/provider.dart';
+import 'package:task_tiles/main.dart';
 import 'package:task_tiles/tile.dart';
 import 'package:task_tiles/tile_drag_receiver.dart';
 
@@ -23,9 +24,9 @@ class _TileGridPageState extends State<TileGridPage> {
       body: TileGrid(),
       floatingActionButton: FloatingActionButton(
           onPressed: () => setState(() {
-                Provider.of<LayoutParams>(context, listen: false)
-                    .regenerate(context);
-                return;
+                // Provider.of<LayoutParams>(context, listen: false)
+                //     .regenerate(context);
+                // return;
 
                 //   var noteTiles = NoteTiles.of(context);
                 //   var tiles = noteTiles.tiles;
@@ -53,6 +54,10 @@ class _TileGridPageState extends State<TileGridPage> {
                 //     width: 1,
                 //     height: 1,
                 //   ));
+
+                // Provider.of<NoteTiles>(context, listen: false)
+                //   ..clear()
+                //   ..addAll(getTiles());
               })),
     );
   }
@@ -126,7 +131,7 @@ class _DraggableLayerState extends State<DraggableLayer> {
       rowSizes: [
         for (var i = -1; i < maxY + 10; i++) size.px
       ], //start at i=-1 to get >1 entry
-      children: tiles.map((tile) => NoteTile(tile: tile)).toList(),
+      children: tiles.map((tile) => PlacedNoteTile(tile: tile)).toList(),
     );
   }
 }
