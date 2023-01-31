@@ -1,10 +1,12 @@
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:task_tiles/provider.dart';
-import 'custom_widgets.dart';
+import '../custom_widgets.dart';
 import 'note_tile.dart';
-import 'tile.dart';
+import '../tile.dart';
 import 'package:flutter/material.dart';
+
+import 'note_tile_contents.dart';
 
 class DraggableNoteTile extends StatefulWidget {
   const DraggableNoteTile({super.key, required this.tile});
@@ -53,19 +55,15 @@ class DragFeedbackNoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const scaleFactor = 75;
+
     var bounds = tile.bounds;
 
     return SizedCard(
-        height: (100 * bounds.height).toDouble(),
-        width: (100 * bounds.width).toDouble(),
+        height: (scaleFactor * bounds.height).toDouble(),
+        width: (scaleFactor * bounds.width).toDouble(),
         child: Center(
-            child: Column(
-          children: [
-            const Spacer(),
-            NoteTileTitle(tile: tile),
-            const Icon(Icons.add_location_alt_outlined),
-            const Spacer(),
-          ],
-        )));
+          child: NoteTileTitle(tile: tile),
+        ));
   }
 }

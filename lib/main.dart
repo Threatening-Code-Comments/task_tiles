@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_tiles/tile.dart';
 import 'provider.dart';
-import 'tile_grid_page.dart';
+import 'pages/tile_grid_page.dart';
 
 void main() {
   runApp(MultiProvider(

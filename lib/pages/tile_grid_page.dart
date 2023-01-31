@@ -5,10 +5,10 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:provider/provider.dart';
 import 'package:task_tiles/main.dart';
 import 'package:task_tiles/tile.dart';
-import 'package:task_tiles/tile_drag_receiver.dart';
+import 'package:task_tiles/note_tiles/tile_drag_receiver.dart';
 
-import 'provider.dart';
-import 'note_tile.dart';
+import '../provider.dart';
+import '../note_tiles/note_tile.dart';
 
 class TileGridPage extends StatefulWidget {
   const TileGridPage({super.key, required BottomAppBar appBar});
@@ -22,43 +22,8 @@ class _TileGridPageState extends State<TileGridPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: TileGrid(),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () => setState(() {
-                // Provider.of<LayoutParams>(context, listen: false)
-                //     .regenerate(context);
-                // return;
-
-                //   var noteTiles = NoteTiles.of(context);
-                //   var tiles = noteTiles.tiles;
-                //   var tileMap = NoteTiles.tileMap(context);
-                //   var width = LayoutPropertiesInherited.of(context).width;
-
-                //   int minX = -1;
-                //   int minY = -1;
-
-                //   whileTrue:
-                //   while (true) {
-                //     minY++;
-                //     for (var i = 0; i < width; i++) {
-                //       if (tileMap[Point(i, minY)] == null) {
-                //         minX = i;
-                //         break whileTrue;
-                //       }
-                //     }
-                //   }
-
-                //   tiles.add(Tile.withSizes(
-                //     name: "newTile",
-                //     xStart: minX,
-                //     yStart: minY,
-                //     width: 1,
-                //     height: 1,
-                //   ));
-
-                // Provider.of<NoteTiles>(context, listen: false)
-                //   ..clear()
-                //   ..addAll(getTiles());
-              })),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () => setState(() {})),
     );
   }
 }
