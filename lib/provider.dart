@@ -116,4 +116,11 @@ class NoteTiles with ChangeNotifier {
   void clear() => _tiles.clear;
 
   addAll(List<Tile> tiles) => _tiles.addAll(tiles);
+
+  void rebuild(List<Tile> list) {
+    _tiles.clear();
+    _tiles.addAll(list);
+
+    _notify();
+  }
 }

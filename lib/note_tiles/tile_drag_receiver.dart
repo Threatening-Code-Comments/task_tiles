@@ -56,8 +56,6 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
           tile.tempBounds = tile.bounds;
           tile.tempBounds.moveToPoint(_coordinate, width);
 
-          print("hey ho gang gang");
-
           // -------------hier startet der algo code
 
           var tiles =
@@ -69,9 +67,16 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
               tiles: tiles, blockingTile: tile, gridWidth: gridWidth);
           //Algo Klasse => {bool success; Map<Tile, Point> result}
 
+          tile.promoteTempBounds();
+          for (var tile2 in ergebnis.movedTiles) {
+            tile2.promoteTempBounds();
+          }
+
           if (ergebnis.succ) {
             Provider.of<NoteTiles>(context, listen: false)
-                .updateTiles(ergebnis.movedTiles, blockingTile: tile);
+                // .notify();
+                //     .updateTiles(ergebnis.movedTiles, blockingTile: tile);
+                .rebuild([...ergebnis.movedTiles, tile]);
           } else {
             print("FUCK FUCK FUCK INFINITY");
           }
@@ -81,6 +86,7 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
       },
       // onLeave: (data) {
       //   setState(() {
+
       //   });
       // },
       onAccept: (data) => setState(() {

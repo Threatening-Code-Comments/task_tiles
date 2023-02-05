@@ -62,7 +62,8 @@ class MoveAlgorythm {
         for (var prevDir in Direction.values) {
           var movement = howMuchDoINeedToMoveThisTileIn(
               dir, tiles[i], previousTiles[prevDir]!);
-          var totalMovement = previousValues[prevDir]! + movement;
+          var totalMovement = (previousValues[prevDir] ?? 0) + movement;
+
           if (totalMovement <= bestMovement) {
             bestMovement = totalMovement;
             bestNewTiles = List.from(previousTiles[prevDir]!);

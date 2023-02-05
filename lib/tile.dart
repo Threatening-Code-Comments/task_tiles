@@ -31,7 +31,7 @@ class Tile {
         isVisible = tile.isVisible,
         name = tile.name,
         bounds = Bounds.fromBounds(tile.bounds),
-        _tempBounds = Bounds.fromBounds(tile.tempBounds);
+        _tempBounds = Bounds.fromBoundsNullable(tile.tempBoundsNullable);
 
   Tile.withSizes(
       {required String name,
@@ -57,6 +57,7 @@ class Tile {
   //Bounds bounds;
   Bounds bounds;
 
+  Bounds? _tempBounds;
   Bounds get tempBounds => _tempBounds ?? Bounds.fromBounds(bounds);
   set tempBounds(Bounds? value) {
     if (max(value?.x.from ?? 0, value?.x.to ?? 0) > 3) {
@@ -65,7 +66,7 @@ class Tile {
     _tempBounds = value;
   }
 
-  Bounds? _tempBounds;
+  Bounds? get tempBoundsNullable => _tempBounds;
 
   void promoteTempBounds() {
     if (_tempBounds == null) return;
@@ -107,7 +108,12 @@ class Tile {
 
   @override
   String toString() {
-    return "$name ($id)";
+    //return "$name ($id)";
+    return toStringWithBounds();
+  }
+
+  String toStringWithBounds() {
+    return "$name [$bounds]";
   }
 
   static final emptyTile = Tile.empty();
@@ -122,8 +128,9 @@ class Tile {
           bounds: origin.bounds,
           enabled: origin.enabled,
           isVisible: origin.isVisible,
-          tempBounds: Bounds.fromBounds(origin.tempBounds)
-            ..move(dir, amountMoved), //move bounds in constructor
+          tempBounds:
+              Bounds.fromBounds(origin.tempBoundsNullable ?? origin.bounds)
+                ..move(dir, amountMoved), //move bounds in constructor
         );
 }
 
@@ -134,6 +141,9 @@ class Bounds {
 
   Bounds.fromBounds(Bounds bounds)
       : this(x: Range.fromRange(bounds.x), y: Range.fromRange(bounds.y));
+
+  static Bounds? fromBoundsNullable(Bounds? bounds) =>
+      bounds == null ? null : Bounds.fromBounds(bounds);
 
   Bounds.fromSizes(
       {required int xStart,
