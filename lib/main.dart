@@ -54,7 +54,7 @@ class TaskTiles extends StatelessWidget {
         title: 'TaskTiles',
         theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.dark, //ThemeMode.system,
         home: TileGridPage(appBar: bottomNavigationBar));
   }
 }

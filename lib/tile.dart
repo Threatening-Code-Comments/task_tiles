@@ -15,6 +15,8 @@ class Tile {
   Tile(
       {int? id,
       required this.name,
+      String? title,
+      String? text,
       bool? enabled,
       bool? isVisible,
       Bounds? bounds,
@@ -23,13 +25,17 @@ class Tile {
         enabled = enabled ?? true,
         isVisible = isVisible ?? true,
         bounds = bounds ?? Bounds.empty(),
-        _tempBounds = tempBounds;
+        _tempBounds = tempBounds,
+        title = title ?? "",
+        text = text ?? "";
 
   Tile.copy(Tile tile)
       : id = tile.id, //const Uuid().v1().toString(),
         enabled = tile.enabled,
         isVisible = tile.isVisible,
         name = tile.name,
+        title = tile.title,
+        text = tile.text,
         bounds = Bounds.fromBounds(tile.bounds),
         _tempBounds = Bounds.fromBoundsNullable(tile.tempBoundsNullable);
 
@@ -93,7 +99,7 @@ class Tile {
       randomName = "$randomName $wordPair";
     }
 
-    return Tile(name: randomName);
+    return Tile(name: randomName, title: randomName);
   }
 
   @override
@@ -125,6 +131,8 @@ class Tile {
       : this(
           id: origin.id,
           name: origin.name,
+          title: origin.title,
+          text: origin.text,
           bounds: origin.bounds,
           enabled: origin.enabled,
           isVisible: origin.isVisible,
