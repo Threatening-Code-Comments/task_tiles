@@ -69,6 +69,7 @@ class Tile {
     if (max(value?.x.from ?? 0, value?.x.to ?? 0) > 3) {
       throw Exception("X must not be > 3, bounds: $value");
     }
+
     _tempBounds = value;
   }
 
@@ -81,6 +82,8 @@ class Tile {
 
     _tempBounds = null;
   }
+
+  bool get hasTempBounds => _tempBounds != null && _tempBounds != bounds;
 
   int get maxY => tempBounds.y.to;
 
@@ -168,6 +171,13 @@ class Bounds {
 
   int get width => x.size;
   int get height => y.size;
+
+  @override
+  bool operator ==(Object other) =>
+      other is Bounds && hashCode == other.hashCode;
+
+  @override
+  int get hashCode => hash2(x, y);
 
   void moveToPoint(Point point, int maxWidth) =>
       moveTo(point.x.toInt(), point.y.toInt(), maxWidth);
@@ -275,6 +285,13 @@ class Range {
   String toString() {
     return '$from..$to';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Range && hashCode == other.hashCode;
+
+  @override
+  int get hashCode => hash2(from, to);
 
   ///Constructor for using width or height. Argument size defaults to 1.
   Range.fromSize({required int from, int? size})

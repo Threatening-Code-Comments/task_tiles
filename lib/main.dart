@@ -9,6 +9,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => LayoutParams()),
       ChangeNotifierProvider(create: (context) => NoteTiles(tiles: getTiles())),
       ChangeNotifierProvider(create: (context) => IgnorePointerProvider()),
+      ChangeNotifierProvider(create: ((context) => TileShakeProvider())),
     ],
     child: const TaskTiles(),
   ));

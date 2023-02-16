@@ -1,12 +1,14 @@
 to do:
   moveAlgo:
-    make tiles interface with moveAlgo again (??)
     make it more performant:
       first try = singleton which saves constructor params and if these are the same, return the singleton
       singleton hashMap with hashed input parameters and solutions:
         constructor => if(map[input.hashCode] == null) MoveAlgo(input) else map[input.hashCode]
   catch back-event and make it do the correct thing
   animate layout changes
+
+commit v4:
+  fixed moveAlgo
 
 commit v3:
   tried to fix moveAlgo, didn't work

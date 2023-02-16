@@ -77,6 +77,11 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
                 // .notify();
                 //     .updateTiles(ergebnis.movedTiles, blockingTile: tile);
                 .rebuild([...ergebnis.movedTiles, tile]);
+
+            for (var movedTile in ergebnis.movedTiles) {
+              Provider.of<TileShakeProvider>(context, listen: false)
+                  .tileShakes(movedTile, isShaking: (movedTile.hasTempBounds));
+            }
           } else {
             print("FUCK FUCK FUCK INFINITY");
           }
@@ -97,6 +102,8 @@ class _TileDragReceiverState extends State<TileDragReceiver> {
         for (var tile in tiles) {
           tile.enabled = true;
           tile.promoteTempBounds();
+          Provider.of<TileShakeProvider>(context, listen: false)
+              .tileShakes(tile, isShaking: false);
         }
 
         Provider.of<NoteTiles>(context, listen: false).updateTiles(tiles);

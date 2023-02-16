@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:flutter_shake_animated/flutter_shake_animated.dart';
 import 'package:task_tiles/pages/tile_settings_page.dart';
 import 'package:task_tiles/provider.dart';
 import 'package:task_tiles/tile.dart';
@@ -22,9 +23,14 @@ class NoteTile extends StatefulWidget {
 class _NoteTileState extends State<NoteTile> {
   @override
   Widget build(BuildContext context) {
-    return (widget.tile.enabled)
-        ? EnabledNoteTile(tile: widget.tile)
-        : DisabledNoteTile(tile: widget.tile);
+    return ShakeWidget(
+      shakeConstant: ShakeDefaultConstant2(),
+      autoPlay: Provider.of<TileShakeProvider>(context).isShaking(widget.tile),
+      enableWebMouseHover: false,
+      child: (widget.tile.enabled)
+          ? EnabledNoteTile(tile: widget.tile)
+          : DisabledNoteTile(tile: widget.tile),
+    );
   }
 }
 

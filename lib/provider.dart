@@ -21,6 +21,21 @@ class LayoutParams with ChangeNotifier {
   }
 }
 
+class TileShakeProvider with ChangeNotifier{
+
+  final Map<Tile, bool> _tileIsShaking = {};
+
+  bool isShaking(Tile tile) {
+    return _tileIsShaking[tile] ?? false;
+  }
+
+  void tileShakes(Tile tile, {bool isShaking = true}){
+    _tileIsShaking[tile] = isShaking;
+    notifyListeners();
+  }
+
+}
+
 class IgnorePointerProvider with ChangeNotifier {
   bool _ignore = true;
 
